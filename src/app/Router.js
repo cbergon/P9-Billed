@@ -35,6 +35,7 @@ export default () => {
       bills
         .getBills()
         .then((data) => {
+          console.log("inRouter", data);
           rootDiv.innerHTML = BillsUI({ data });
           const divIcon1 = document.getElementById("layout-icon1");
           const divIcon2 = document.getElementById("layout-icon2");

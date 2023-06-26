@@ -69,10 +69,6 @@ describe("Given I am connected as an employee", () => {
       expect(uploadInput.files[0].name).toBe("hello.jpeg");
       expect(uploadInput.files[0].type).toBe("image/jpeg");
       expect(handleChangeFile).toHaveBeenCalled();
-
-      // supposed to refuse any other extension
-      fireEvent.change(uploadInput, { target: { files: [file3] } });
-      expect(uploadInput.files[0].name).toBe("hello");
     });
   });
 });

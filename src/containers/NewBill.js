@@ -11,7 +11,12 @@ export default class NewBill {
     );
     formNewBill.addEventListener("submit", this.handleSubmit);
     const file = this.document.querySelector(`input[data-testid="file"]`);
-    file.addEventListener("change", this.handleChangeFile);
+
+    file.addEventListener("change", () => {
+      if (["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
+        this.handleChangeFile();
+      }
+    });
     this.fileUrl = null;
     this.fileName = null;
     this.billId = null;

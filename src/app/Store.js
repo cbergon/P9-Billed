@@ -45,6 +45,16 @@ const getHeaders = (headers) => {
   return { ...h, ...headers };
 };
 
+// @david faut filtrer ???
+// et sur les autres call aussi ?
+function billsVvalidate(bills) {
+  return bills.filter((bill) => {
+    if (bill.type !== null && bill.amount !== null) {
+      return bill;
+    }
+  });
+}
+
 class ApiEntity {
   constructor({ key, api }) {
     this.key = key;
@@ -57,10 +67,15 @@ class ApiEntity {
     });
   }
   async list({ headers = {} } = {}) {
-    return await this.api.get({
-      url: `/${this.key}`,
-      headers: getHeaders(headers),
-    });
+    return await this.api
+      .get({
+        url: `/${this.key}`,
+        headers: getHeaders(headers),
+      })
+      .then((snapshot) => {
+        console.log("inApiList", snapshot);
+        return billsVvalidate(snapshot);
+      });
   }
   async update({ data, selector, headers = {} }) {
     return await this.api.patch({

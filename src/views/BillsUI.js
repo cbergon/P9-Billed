@@ -20,6 +20,7 @@ const row = (bill) => {
 };
 
 const rows = (data) => {
+  console.log("inRows", data);
   return data && data.length
     ? data
         .sort(({ date: a }, { date: b }) => {
@@ -32,7 +33,9 @@ const rows = (data) => {
     : "";
 };
 
+// @david what is this export default unnamed () ?
 export default ({ data: bills, loading, error }) => {
+  console.log("inBillsUI", bills);
   const modal = () => `
     <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
