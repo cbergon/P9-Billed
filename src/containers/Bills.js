@@ -40,7 +40,6 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
-          console.log("inGetBills", snapshot);
           const bills = snapshot.map((doc) => {
             try {
               return {
@@ -52,7 +51,6 @@ export default class {
               // if for some reason, corrupted data was introduced,
               // we manage here failing formatDate function
               // log the error and return unformatted date in that case
-              console.log(e, "for", doc);
               return {
                 ...doc,
                 date: doc.date,
@@ -60,7 +58,6 @@ export default class {
               };
             }
           });
-          console.log("length", bills.length);
           return bills;
         });
     }

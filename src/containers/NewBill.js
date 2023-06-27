@@ -10,30 +10,32 @@ export default class NewBill {
       `form[data-testid="form-new-bill"]`
     );
     formNewBill.addEventListener("submit", this.handleSubmit);
-    const file = this.document.querySelector(`input[data-testid="file"]`);
-
-    file.addEventListener("change", () => {
-      if (["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
-        this.handleChangeFile();
+    const parent = this;
+    $(`input[data-testid="file"]`).on("change", function () {
+      const value = $(this).val();
+      const ext = value.split(".").pop();
+      if (["png", "jpeg", "jpg"].includes(ext)) {
+        parent.handleChangeFile(value);
+      } else {
+        console.error(`Type de fichier : ${ext} non pris en charge`);
       }
     });
+
     this.fileUrl = null;
     this.fileName = null;
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
 
-  handleChangeFile = (e) => {
-    e.preventDefault();
+  handleChangeFile = (value) => {
     const file = this.document.querySelector(`input[data-testid="file"]`)
       .files[0];
-    const filePath = e.target.value.split(/\\/g);
+    const filePath = value.split(/\\/g);
     const fileName = filePath[filePath.length - 1];
     const formData = new FormData();
     const email = JSON.parse(localStorage.getItem("user")).email;
     formData.append("file", file);
     formData.append("email", email);
-
     this.store
       .bills()
       .create({
@@ -43,7 +45,6 @@ export default class NewBill {
         },
       })
       .then(({ fileUrl, key }) => {
-        console.log(fileUrl);
         this.billId = key;
         this.fileUrl = fileUrl;
         this.fileName = fileName;
@@ -80,7 +81,7 @@ export default class NewBill {
     this.onNavigate(ROUTES_PATH["Bills"]);
   };
 
-  // not need to cover this function by tests
+  // no need to cover this function by tests
   updateBill = (bill) => {
     if (this.store) {
       this.store

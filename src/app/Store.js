@@ -73,7 +73,6 @@ class ApiEntity {
         headers: getHeaders(headers),
       })
       .then((snapshot) => {
-        console.log("inApiList", snapshot);
         return billsVvalidate(snapshot);
       });
   }
@@ -85,6 +84,7 @@ class ApiEntity {
     });
   }
   async create({ data, headers = {} }) {
+    console.log("data", data);
     return await this.api.post({
       url: `/${this.key}`,
       headers: getHeaders(headers),
