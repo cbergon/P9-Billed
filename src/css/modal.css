@@ -1,0 +1,9 @@
+.modal-img-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-img {
+	object-fit: contain;
+}
