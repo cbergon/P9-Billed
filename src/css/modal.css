@@ -6,4 +6,5 @@
 
 .modal-img {
 	object-fit: contain;
+	max-width: 100%;
 }

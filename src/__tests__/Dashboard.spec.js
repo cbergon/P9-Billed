@@ -83,8 +83,11 @@ describe("Given I am connected as an Admin", () => {
       );
 
       const icon1 = screen.getByTestId("arrow-icon1");
+      expect(icon1).toBeDefined();
       const icon2 = screen.getByTestId("arrow-icon2");
+      expect(icon2).toBeDefined();
       const icon3 = screen.getByTestId("arrow-icon3");
+      expect(icon3).toBeDefined();
 
       icon1.addEventListener("click", handleShowTickets1);
       userEvent.click(icon1);

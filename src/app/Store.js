@@ -45,8 +45,6 @@ const getHeaders = (headers) => {
   return { ...h, ...headers };
 };
 
-// @david faut filtrer ???
-// et sur les autres call aussi ?
 function billsVvalidate(bills) {
   return bills.filter((bill) => {
     if (bill.type !== null && bill.amount !== null) {

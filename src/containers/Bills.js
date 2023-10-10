@@ -25,6 +25,7 @@ export default class {
   };
 
   handleClickIconEye = (icon) => {
+    console.log(icon);
     const billUrl = icon.getAttribute("data-bill-url");
     $("#modaleFile")
       .find(".modal-body")

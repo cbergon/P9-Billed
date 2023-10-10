@@ -111,7 +111,7 @@ describe("Given that I am a user on login page", () => {
       );
     });
 
-    test("It should renders Bills page", () => {
+    test("It should render Bills page", () => {
       expect(screen.getAllByText("Mes notes de frais")).toBeTruthy();
     });
   });
@@ -119,7 +119,7 @@ describe("Given that I am a user on login page", () => {
 
 describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on admin button Login In", () => {
-    test("Then It should renders Login page", () => {
+    test("Then It should render Login page", () => {
       document.body.innerHTML = LoginUI();
 
       const inputEmailUser = screen.getByTestId("admin-email-input");

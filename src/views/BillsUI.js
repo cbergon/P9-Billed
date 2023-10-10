@@ -32,7 +32,6 @@ const rows = (data) => {
     : "";
 };
 
-// @david what is this export default unnamed () ?
 export default ({ data: bills, loading, error }) => {
   const modal = () => `
     <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

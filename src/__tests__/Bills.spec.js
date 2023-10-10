@@ -2,10 +2,11 @@
  * @jest-environment jsdom
  */
 
-import { screen, waitFor } from "@testing-library/dom";
+import { screen, waitFor, fireEvent } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
+import Bills from "../containers/Bills.js";
 import { bills } from "../fixtures/bills.js";
-import { ROUTES_PATH } from "../constants/routes.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 
 import router from "../app/Router.js";
@@ -43,6 +44,46 @@ describe("Given I am connected as an employee", () => {
       const antiChrono = (a, b) => (a < b ? 1 : -1);
       const datesSorted = [...dates].sort(antiChrono);
       expect(dates).toEqual(datesSorted);
+    });
+
+    test("Then I should be able to create a new bill", () => {
+      document.body.innerHTML = BillsUI({ data: [] });
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const firestore = null;
+      const newBill = new Bills({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+      const handleClickNewBill = jest.fn(newBill.handleClickNewBill);
+      const newBillBtn = screen.getByTestId("btn-new-bill");
+      newBillBtn.addEventListener("click", handleClickNewBill);
+      fireEvent.click(newBillBtn);
+      expect(handleClickNewBill).toHaveBeenCalled();
+    });
+
+    test("Then it should open a modal when I click on the eye icon", () => {
+      document.body.innerHTML = BillsUI({ data: bills });
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname });
+      };
+      const firestore = null;
+      const newBill = new Bills({
+        document,
+        onNavigate,
+        firestore,
+        localStorage: window.localStorage,
+      });
+      $.fn.modal = jest.fn();
+      const handleClickIconEye = jest.fn();
+      const iconEye = screen.getAllByTestId("icon-eye")[0];
+      iconEye.addEventListener("click", handleClickIconEye);
+      fireEvent.click(iconEye);
+      expect(handleClickIconEye).toHaveBeenCalled();
+      expect($.fn.modal).toHaveBeenCalled();
     });
   });
 });

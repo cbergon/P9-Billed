@@ -40,14 +40,13 @@ describe("Given I am connected as an employee", () => {
       });
       document.body.innerHTML = html;
 
-      // @todo write assertion
       const uploadInput = screen.getByTestId("file");
       const file0 = new File(["hello"], "hello.png", { type: "image/png" });
       const file1 = new File(["hello"], "hello.jpg", { type: "image/jpg" });
       const file2 = new File(["hello"], "hello.jpeg", { type: "image/jpeg" });
       const file3 = new File(["hello"], "hello.txt", { type: "text/plain" });
 
-      const handleChangeFile = jest.fn(newBill.handleChangeFile);
+      const handleChangeFile = jest.fn();
 
       uploadInput.addEventListener("change", handleChangeFile);
 
@@ -69,6 +68,39 @@ describe("Given I am connected as an employee", () => {
       expect(uploadInput.files[0].name).toBe("hello.jpeg");
       expect(uploadInput.files[0].type).toBe("image/jpeg");
       expect(handleChangeFile).toHaveBeenCalled();
+    });
+
+    test("Then I can fill the form and submit a new bill", async () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+      const root = document.createElement("div");
+      root.setAttribute("id", "root");
+      document.body.append(root);
+      router();
+
+      window.onNavigate(ROUTES_PATH.NewBill);
+      const html = NewBillUI();
+      document.body.innerHTML = html;
+
+      const newBill = new NewBill({
+        document,
+        onNavigate: jest.fn(),
+        store: mockStore,
+        localStorage: window.localStorage,
+      });
+
+      const form = screen.getByTestId("form-new-bill");
+      const handleSubmit = jest.fn((e) => e.preventDefault());
+      form.addEventListener("submit", handleSubmit);
+      fireEvent.submit(form);
+      expect(handleSubmit).toHaveBeenCalled();
     });
   });
 });
