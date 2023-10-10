@@ -128,7 +128,7 @@ export default class {
     };
     this.updateBill(newBill);
     this.onNavigate(ROUTES_PATH["Dashboard"]);
-    // window.location.reload();
+    window.location.reload();
   };
 
   handleRefuseSubmit = (e, bill) => {
@@ -139,7 +139,7 @@ export default class {
     };
     this.updateBill(newBill);
     this.onNavigate(ROUTES_PATH["Dashboard"]);
-    // window.location.reload();
+    window.location.reload();
   };
 
   // displays a list of tickets in a dropdown menu
