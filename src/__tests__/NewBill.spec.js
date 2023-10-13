@@ -4,6 +4,7 @@
 
 import { fireEvent, screen } from "@testing-library/dom";
 import NewBillUI from "../views/NewBillUI.js";
+import BillsUI from "../views/BillsUI.js";
 import NewBill from "../containers/NewBill.js";
 import { ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
@@ -15,7 +16,8 @@ jest.mock("../app/Store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
-    test("Then I can upload a new bill only with jpg, jpeg or png extension", async () => {
+    beforeEach(() => {
+      jest.spyOn(mockStore, "bills");
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
@@ -27,9 +29,11 @@ describe("Given I am connected as an employee", () => {
       );
       const root = document.createElement("div");
       root.setAttribute("id", "root");
-      document.body.append(root);
+      document.body.appendChild(root);
       router();
+    });
 
+    test("Then I can upload a new bill only with jpg, jpeg or png extension", async () => {
       window.onNavigate(ROUTES_PATH.NewBill);
       const html = NewBillUI();
       const newBill = new NewBill({
@@ -71,20 +75,6 @@ describe("Given I am connected as an employee", () => {
     });
 
     test("Then I can fill the form and submit a new bill", async () => {
-      Object.defineProperty(window, "localStorage", {
-        value: localStorageMock,
-      });
-      window.localStorage.setItem(
-        "user",
-        JSON.stringify({
-          type: "Employee",
-        })
-      );
-      const root = document.createElement("div");
-      root.setAttribute("id", "root");
-      document.body.append(root);
-      router();
-
       window.onNavigate(ROUTES_PATH.NewBill);
       const html = NewBillUI();
       document.body.innerHTML = html;
@@ -101,6 +91,57 @@ describe("Given I am connected as an employee", () => {
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
       expect(handleSubmit).toHaveBeenCalled();
+    });
+
+    describe("When an error occurs on API", () => {
+      const fakeBill = {
+        id: "47qAXb6fIm2zOKkLzMro",
+        vat: "80",
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
+        status: "pending",
+        type: "Hôtel et logement",
+        commentary: "séminaire billed",
+        name: "encore",
+        fileName: "preview-facture-free-201801-pdf-1.jpg",
+        date: "2004-04-04",
+        amount: 400,
+        commentAdmin: "ok",
+        email: "a@a",
+        pct: 20,
+      };
+
+      test("Then I see an error if the API returns a 404 error", async () => {
+        const errorHandler = jest
+          .fn(mockStore.create)
+          .mockImplementationOnce(() =>
+            Promise.reject(new Error("Erreur 404"))
+          );
+        let response;
+        try {
+          response = await errorHandler(fakeBill);
+        } catch (err) {
+          response = { error: err };
+        }
+        document.body.innerHTML = BillsUI(response);
+        expect(screen.getByText(/Erreur 404/)).toBeTruthy();
+      });
+
+      test("Then I see an error if the API returns a 500 error", async () => {
+        const errorHandler = jest
+          .fn(mockStore.create)
+          .mockImplementationOnce(() =>
+            Promise.reject(new Error("Erreur 500"))
+          );
+        let response;
+        try {
+          response = await errorHandler(fakeBill);
+        } catch (err) {
+          response = { error: err };
+        }
+        document.body.innerHTML = BillsUI(response);
+        expect(screen.getByText(/Erreur 500/)).toBeTruthy();
+      });
     });
   });
 });

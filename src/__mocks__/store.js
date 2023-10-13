@@ -97,6 +97,5 @@ const mockedBills = {
 export default {
   bills() {
     return mockedBills;
-    //return {}
   },
 };

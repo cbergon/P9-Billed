@@ -327,6 +327,7 @@ describe("Given I am a user connected as Admin", () => {
       expect(contentRefused).toBeTruthy();
       expect(screen.getByTestId("big-billed-icon")).toBeTruthy();
     });
+
     describe("When an error occurs on API", () => {
       beforeEach(() => {
         jest.spyOn(mockStore, "bills");
@@ -345,6 +346,7 @@ describe("Given I am a user connected as Admin", () => {
         document.body.appendChild(root);
         router();
       });
+
       test("fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {

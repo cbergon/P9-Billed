@@ -36,7 +36,7 @@ export const card = (bill) => {
     ? firstAndLastNames.split(".")[1]
     : firstAndLastNames;
 
-  console.log("bill", bill);
+  // console.log("bill", bill);
   return `
     <div class='bill-card' id='open-bill${bill.id}' data-testid='open-bill${
     bill.id
@@ -128,7 +128,6 @@ export default class {
     };
     this.updateBill(newBill);
     this.onNavigate(ROUTES_PATH["Dashboard"]);
-    window.location.reload();
   };
 
   handleRefuseSubmit = (e, bill) => {
@@ -139,7 +138,6 @@ export default class {
     };
     this.updateBill(newBill);
     this.onNavigate(ROUTES_PATH["Dashboard"]);
-    window.location.reload();
   };
 
   // displays a list of tickets in a dropdown menu
@@ -192,7 +190,10 @@ export default class {
       return this.store
         .bills()
         .update({ data: JSON.stringify(bill), selector: bill.id })
-        .then((bill) => bill)
+        .then((bill) => {
+          window.location.reload();
+          return bill;
+        })
         .catch(console.log);
     }
   };
