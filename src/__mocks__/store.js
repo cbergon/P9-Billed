@@ -93,6 +93,13 @@ const mockedBills = {
     });
   },
 };
+export function errorHandler(fn, errorCode) {
+  return jest
+    .fn(fn)
+    .mockImplementationOnce(() =>
+      Promise.reject(new Error(`Erreur ${errorCode}`))
+    );
+}
 
 export default {
   bills() {

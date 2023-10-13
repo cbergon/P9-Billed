@@ -8,7 +8,7 @@ import BillsUI from "../views/BillsUI.js";
 import NewBill from "../containers/NewBill.js";
 import { ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
-import mockStore from "../__mocks__/store.js";
+import mockStore, { errorHandler } from "../__mocks__/store.js";
 
 import router from "../app/Router.js";
 
@@ -112,14 +112,10 @@ describe("Given I am connected as an employee", () => {
       };
 
       test("Then I see an error if the API returns a 404 error", async () => {
-        const errorHandler = jest
-          .fn(mockStore.create)
-          .mockImplementationOnce(() =>
-            Promise.reject(new Error("Erreur 404"))
-          );
+        const mockedError = errorHandler(mockStore.create, "404");
         let response;
         try {
-          response = await errorHandler(fakeBill);
+          response = await mockedError(fakeBill);
         } catch (err) {
           response = { error: err };
         }
@@ -128,14 +124,10 @@ describe("Given I am connected as an employee", () => {
       });
 
       test("Then I see an error if the API returns a 500 error", async () => {
-        const errorHandler = jest
-          .fn(mockStore.create)
-          .mockImplementationOnce(() =>
-            Promise.reject(new Error("Erreur 500"))
-          );
+        const mockedError = errorHandler(mockStore.create, "500");
         let response;
         try {
-          response = await errorHandler(fakeBill);
+          response = await mockedError(fakeBill);
         } catch (err) {
           response = { error: err };
         }
